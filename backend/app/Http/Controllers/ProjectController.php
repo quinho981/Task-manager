@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectsRequest;
 use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProjectController extends Controller
@@ -17,18 +18,21 @@ class ProjectController extends Controller
         $this->projectService = $projectService;
     }
 
-    public function index(): AnonymousResourceCollection
+    public function index()
     {
         $projects = $this->projectService->getAll();
 
         return ProjectResource::collection($projects);
     }
 
-    public function store(StoreProjectsRequest $request): ProjectResource
+    public function store(StoreProjectsRequest $request): JsonResponse
     {
         $data = $request->validated();
 
         $projects = $this->projectService->create($data);
-        return new ProjectResource($projects);
+        
+        return (new ProjectResource($projects))
+            ->response()
+            ->setStatusCode(201);
     }
 }

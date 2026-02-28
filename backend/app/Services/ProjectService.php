@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProjectService
 {
-    public function getAll(): Collection
+    public function getAll()
     {
-        return Project::all();
+        return Project::query()->latest()->paginate(10);
     }
 
     public function create(array $data): Project

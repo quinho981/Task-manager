@@ -3,11 +3,12 @@
 namespace App\Services;
 
 use App\Models\Task;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class TaskService
 {
-    public function listByProject(int $id, array $filters = []): Collection
+    public function listByProject(int $id, array $filters = []): LengthAwarePaginator
     {
         $query = Task::where('project_id', $id);
 
@@ -23,7 +24,7 @@ class TaskService
             $query->overdue();
         }
 
-        return $query->get();
+        return $query->latest()->paginate(10);
     }
 
     public function create(array $data): Task
