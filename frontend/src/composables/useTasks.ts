@@ -19,19 +19,34 @@ export function useTasks() {
 
   async function updateStatus(task: Task, newStatus: Task['status']) {
     const oldStatus = task.status
-    task.status = newStatus // Optimistic update
+    task.status = newStatus
 
     try {
       await axios.patch(`/api/tasks/${task.id}`, {
         status: newStatus
       })
     } catch {
-      task.status = oldStatus // rollback
+      task.status = oldStatus
     }
+  }
+
+  async function createTask(projectId: number, task: { title: string; description: string, priority: string }) {
+    try {
+      const { data } = await axios.post(`/api/projects/${projectId}/tasks`, task)
+      store.tasks.push(data)
+    } catch (err) {
+      store.error = err
+    }
+  }
+
+  async function deleteTask(id: number) {
+    await axios.delete(`/api/tasks/${id}`)
   }
 
   return {
     fetchTasks,
-    updateStatus
+    updateStatus,
+    createTask, 
+    deleteTask
   }
 }

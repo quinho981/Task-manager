@@ -16,5 +16,14 @@ export function useProjects() {
     }
   }
 
-  return { fetchProjects }
+  async function createProject(project: { name: string; description: string }) {
+    try {
+      const { data } = await axios.post('/api/projects', project)
+      store.projects.push(data)
+    } catch (err) {
+      store.error = err
+    }
+  }
+
+  return { fetchProjects, createProject }
 }
