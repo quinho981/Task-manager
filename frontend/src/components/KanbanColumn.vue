@@ -12,6 +12,7 @@ const props = defineProps<{
   title: string
   status: string
   tasks: Task[]
+  loading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -29,29 +30,29 @@ function handleChange(evt: any) {
 
 <template>
     <div>
-        <h2 class="text-sm font-medium text-gray-300 mb-4">
-            {{ title }}
-        </h2>
-        <draggable
-            :list="tasks"
-            group="tasks"
-            item-key="id"
-            class="space-y-4 min-h-[200px]"
-            ghost-class="ghost"
-            @change="handleChange"
-        >
-            <template #item="{ element: task }">
-                <div class="card cursor-grab active:cursor-grabbing">
-                    <TaskCard :task="task" />
-                    <button
-                        @click.stop="emit('delete', task)"
-                        class="ml-3 text-xs text-red-500 hover:text-red-700 hover:!border-red-500 mt-2 transition"
-                    >
-                        Deletar                    
-                    </button>
-                </div>
-            </template>
-        </draggable>
+      <h2 class="text-sm font-medium text-gray-300 mb-4">
+          {{ title }}
+      </h2>
+      <draggable
+          :list="tasks"
+          group="tasks"
+          item-key="id"
+          class="space-y-4 min-h-[200px]"
+          ghost-class="ghost"
+          @change="handleChange"
+      >
+          <template #item="{ element: task }">
+              <div class="card cursor-grab active:cursor-grabbing">
+                  <TaskCard :task="task" />
+                  <button
+                      @click.stop="emit('delete', task)"
+                      class="ml-3 text-xs text-red-500 hover:text-red-700 hover:!border-red-500 mt-2 transition"
+                  >
+                      Deletar                    
+                  </button>
+              </div>
+          </template>
+      </draggable>
     </div>
 </template>
 

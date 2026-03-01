@@ -12,7 +12,10 @@ const description = ref('')
 const priority = ref('low')
 
 function submit() {
-    if (!title.value) return
+    if (!title.value || !description.value) {
+        alert('Por favor, informe o título e a descrição da tarefa.')
+        return
+    }
 
     emit('create', {
         title: title.value,
@@ -94,8 +97,8 @@ function submit() {
                 @click="submit"
                 :disabled="props.loading"
                 class="px-4 py-2 text-sm rounded-xl 
-                    text-white bg-neutral-900 
-                    hover:bg-black 
+                    text-white bg-blue-500 
+                    hover:bg-blue-600 
                     disabled:opacity-50
                     transition"
             >

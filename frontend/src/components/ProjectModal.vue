@@ -8,7 +8,10 @@ const description = ref('')
 const loading = ref(false)
 
 async function submit() {
-    if (!name.value) return
+    if (!name.value || !description.value) {
+        alert('Por favor, informe o nome e a descrição do projeto.')
+        return
+    }
 
     loading.value = true
 
@@ -88,8 +91,8 @@ async function submit() {
                 @click="submit"
                 :disabled="loading"
                 class="px-4 py-2 text-sm rounded-xl 
-                        text-white bg-neutral-900 
-                        hover:bg-black 
+                            text-white bg-blue-500 
+                            hover:bg-blue-600 
                         disabled:opacity-50
                         transition"
                 >

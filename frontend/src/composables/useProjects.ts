@@ -4,16 +4,15 @@ import { useProjectStore } from '@/stores/project.store'
 export function useProjects() {
   const store = useProjectStore()
 
-  async function fetchProjects() {
+  async function fetchProjects(page = 1) {
     store.loading = true
-    try {
-      const { data } = await axios.get('/api/projects')
-      store.projects = data
-    } catch (err) {
-      store.error = err
-    } finally {
-      store.loading = false
-    }
+
+    const { data } = await axios.get('/api/projects', {
+      params: { page }
+    })
+
+    store.projects = data
+    store.loading = false
   }
 
   async function createProject(project: { name: string; description: string }) {

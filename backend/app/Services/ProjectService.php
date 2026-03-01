@@ -9,7 +9,7 @@ class ProjectService
 {
     public function getAll()
     {
-        return Project::query()->latest()->paginate(10);
+        return Project::query()->latest()->paginate(9);
     }
 
     public function create(array $data): Project

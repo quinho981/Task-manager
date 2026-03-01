@@ -12,23 +12,43 @@ const store = useTaskStore()
 
 const showModal = ref(false)
 const creating = ref(false)
+const loading = ref(false)
+const statusFilter = ref('all')
+const priorityFilter = ref('all')
 
-onMounted(() => {
-  fetchTasks(Number(route.params.id))
+
+onMounted(async () => {
+  loading.value = true
+  await fetchTasks(Number(route.params.id))
+  loading.value = false
 })
 
 const tasks = computed(() => store.tasks?.data ?? [])
 
+const filteredTasks = computed(() => {
+  return tasks.value.filter(task => {
+    const statusMatch =
+      statusFilter.value === 'all' ||
+      task.status === statusFilter.value
+
+    const priorityMatch =
+      priorityFilter.value === 'all' ||
+      task.priority === priorityFilter.value
+
+    return statusMatch && priorityMatch
+  })
+})
+
 const todo = computed(() =>
-  tasks.value.filter(t => t.status === 'todo')
+  filteredTasks.value.filter(t => t.status === 'todo')
 )
 
 const inProgress = computed(() =>
-  tasks.value.filter(t => t.status === 'in_progress')
+  filteredTasks.value.filter(t => t.status === 'in_progress')
 )
 
 const done = computed(() =>
-  tasks.value.filter(t => t.status === 'done')
+  filteredTasks.value.filter(t => t.status === 'done')
 )
 
 function handleMove(task: any, newStatus: string) {
@@ -61,7 +81,7 @@ async function handleDelete(task: any) {
 
 <template>
   <div class="min-h-screen">
-    <div class="max-w-7xl mx-auto px-8 py-14">
+    <div class="relative max-w-7xl mx-auto px-8 py-14">
       <div class="flex flex-col gap-6 mb-12 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 class="text-3xl font-semibold tracking-tight text-gray-300">
@@ -87,7 +107,44 @@ async function handleDelete(task: any) {
           </button>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <div class="flex flex-wrap gap-4 mb-8">
+        <select
+          v-model="statusFilter"
+          class="px-3 py-2 text-sm rounded-md bg-neutral-700 text-white border border-neutral-700"
+        >
+          <option value="all">Todos Status</option>
+          <option value="todo">To Do</option>
+          <option value="in_progress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
+        <select
+          v-model="priorityFilter"
+          class="px-3 py-2 text-sm rounded-md bg-neutral-700 text-white border border-neutral-700"
+        >
+          <option value="all">Todas Prioridades</option>
+          <option value="low">Baixa</option>
+          <option value="medium">Média</option>
+          <option value="high">Alta</option>
+        </select>
+      </div>
+
+      <div
+        v-if="loading"
+        class="absolute inset-0 mt-60 z-20 flex items-center justify-center rounded-xl"
+      >
+        <div class="flex items-center gap-3">
+          <div class="h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-sm font-medium text-gray-300">
+            Carregando...
+          </span>
+        </div>
+      </div>
+      
+      <div 
+        v-else 
+        class="grid grid-cols-1 md:grid-cols-3 gap-8"
+      >
         <KanbanColumn
           title="To Do"
           status="todo"
