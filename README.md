@@ -50,12 +50,9 @@ Isso irá subir:
 - MySQL
 - Vue3
 
-Acesse o diretório backend:
+Acesse o diretório backend e rode o comando para copiar o .env.example
 ```
 cd backend
-```
-e rode o comando
-```
 cp .env.example .env
 ```
 
@@ -77,8 +74,8 @@ docker compose exec app php artisan migrate --seed
 ---
 
 Acessando a aplicação
-http://localhost:5173/
-MySQL: localhost:3306
+- http://localhost:5173/
+- MySQL: localhost:3306
 
 ---
 
